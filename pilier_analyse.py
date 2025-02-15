@@ -20,10 +20,15 @@ class parametres():
     N = 5       # [-] Nombre de points en r
 
 # Nombre de points pour l'analyse de convergence
-N_points = [5, 10, 20, 40, 80, 160, 320, 640]
+N_points = [3,5,7,9,12,15]
 L1_modele1, L2_modele1, Linf_modele1 = [], [], []
 L1_modele2, L2_modele2, Linf_modele2 = [], [], []
-dr_values = [] 
+dr_values = []
+r_solution = []
+solution_modele1 = []
+solution_modele2 = []
+solution_analytique = []
+ 
 #Calcul des erreurs pour chaque modèle et chaque nombre de points
 
 for N in N_points:
@@ -36,27 +41,45 @@ for N in N_points:
     #Calcul de la solution analytique
     r = np.linspace(0, prm.D/2, prm.N)
     C_analytique = (1/4)*(prm.S/prm.D_eff)*((prm.D/2)**2) *( (r**2 / ((prm.D/2)**2)) -1 ) + prm.C_e
+    r_solution.append(r)
+    solution_analytique.append(C_analytique)
+    
+    
+    
+    
+    
+    
     
     # Modèle avec erreur de troncature d'ordre 1
     C_mdf1, _ = mdf1(prm)
+    solution_modele1.append(C_mdf1)
     L1_modele1.append(Erreur_L1(C_analytique, C_mdf1, prm))
     L2_modele1.append(Erreur_L2(C_analytique, C_mdf1, prm))
     Linf_modele1.append(Erreur_Linf(C_analytique, C_mdf1, prm))
 
     # Modèle avec erreur de troncature d'ordre 2
     C_mdf2, _ = mdf2(prm)
+    solution_modele2.append(C_mdf2)
     L1_modele2.append(Erreur_L1(C_analytique, C_mdf2, prm))
     L2_modele2.append(Erreur_L2(C_analytique, C_mdf2, prm))
     Linf_modele2.append(Erreur_Linf(C_analytique, C_mdf2, prm))
 
 
-#Tracé des erreurs
-
-
+plt.figure(1)
+indice_fin = -1
+plt.plot(r_solution[indice_fin],solution_analytique[indice_fin],'k-', label='Solution analytique')
+plt.plot(r_solution[indice_fin],solution_modele1[indice_fin],'o-', label='Solution modèle 1')
+plt.plot(r_solution[indice_fin],solution_modele2[indice_fin],'s-', label='Solution modèle 2')
+plt.xlabel('Rayon (m)')
+plt.ylabel('Concentration (mol/m3)')
+plt.title('Solutions analytiques et numériques pour le maillage le plus fin')
+plt.legend()
+plt.grid(which='both', linestyle='--', linewidth=0.5)
+plt.show()
 
 # Modèle 1
 
-plt.figure(1)
+plt.figure(3)
 
 plt.loglog(dr_values, L1_modele1, 'o-', label='L1 (Modèle 1)')
 plt.loglog(dr_values, L2_modele1, 's-', label='L2 (Modèle 1)')
@@ -73,7 +96,7 @@ plt.show()
 
 # Modèle 2
 
-plt.figure(2)
+plt.figure(4)
 
 plt.loglog(dr_values, L1_modele2, 'o--', label='L1 (Modèle 2)')
 plt.loglog(dr_values, L2_modele2, 's--', label='L2 (Modèle 2)')
