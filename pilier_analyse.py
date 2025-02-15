@@ -23,14 +23,15 @@ class parametres():
 N_points = [5, 10, 20, 40, 80, 160, 320, 640]
 L1_modele1, L2_modele1, Linf_modele1 = [], [], []
 L1_modele2, L2_modele2, Linf_modele2 = [], [], []
-
+dr_values = [] 
 #Calcul des erreurs pour chaque modèle et chaque nombre de points
 
 for N in N_points:
     
     prm = parametres()
     prm.N = N
-
+    prm.dr = prm.D / (2 * (N - 1))  # Calcul de dr
+    dr_values.append(prm.dr)  
 
     #Calcul de la solution analytique
     r = np.linspace(0, prm.D/2, prm.N)
@@ -57,14 +58,14 @@ for N in N_points:
 
 plt.figure(1)
 
-plt.loglog(N_points, L1_modele1, 'o-', label='L1 (Modèle 1)')
-plt.loglog(N_points, L2_modele1, 's-', label='L2 (Modèle 1)')
-plt.loglog(N_points, Linf_modele1, '^-', label='Linf (Modèle 1)')
+plt.loglog(dr_values, L1_modele1, 'o-', label='L1 (Modèle 1)')
+plt.loglog(dr_values, L2_modele1, 's-', label='L2 (Modèle 1)')
+plt.loglog(dr_values, Linf_modele1, '^-', label='Linf (Modèle 1)')
 
 
-plt.xlabel('Nombre de points')
+plt.xlabel('Taille des éléments (m)')
 plt.ylabel('Erreur')
-plt.title('Erreurs (L1, L2, Linf) en fonction du nombre de points pour le modèle 1')
+plt.title('Erreurs (L1, L2, Linf) en fonction de la taille des éléments pour le modèle 1')
 plt.legend()
 plt.grid(which='both', linestyle='--', linewidth=0.5)
 plt.show()
@@ -74,14 +75,14 @@ plt.show()
 
 plt.figure(2)
 
-plt.loglog(N_points, L1_modele2, 'o--', label='L1 (Modèle 2)')
-plt.loglog(N_points, L2_modele2, 's--', label='L2 (Modèle 2)')
-plt.loglog(N_points, Linf_modele2, '^--', label='Linf (Modèle 2)')
+plt.loglog(dr_values, L1_modele2, 'o--', label='L1 (Modèle 2)')
+plt.loglog(dr_values, L2_modele2, 's--', label='L2 (Modèle 2)')
+plt.loglog(dr_values, Linf_modele2, '^--', label='Linf (Modèle 2)')
 
 
-plt.xlabel('Nombre de points')
+plt.xlabel('Taille des éléments (m)')
 plt.ylabel('Erreur')
-plt.title('Erreurs (L1, L2, Linf) en fonction du nombre de points pour le modèle 2')
+plt.title('Erreurs (L1, L2, Linf) en fonction de la taille des éléments pour le modèle 2')
 plt.legend()
 plt.grid(which='both', linestyle='--', linewidth=0.5)
 plt.show()
